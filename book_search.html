@@ -1,0 +1,23 @@
+<html>
+<head>
+<link href="css/search.css" rel="stylesheet">
+<title> A&T Library Book Search </title>
+<meta charset="utf-8">
+</head>
+<body>
+<p class="splash"> A&T Library Search </p>
+<form action="cgi/book-query"> 
+  <select name="searchtype">
+    <option value="title"> Title </option>
+    <option value="author"> Author </option>
+    <option value="summary"> Summary </option>
+    <option value="subject"> Subject </option>
+    <option value="publisher"> Publisher </option>
+    <option value="dewey"> Dewey Decimal </option>
+    <option value="locc"> LOCC </option>
+    <option value="isbn"> ISBN </option>
+    <option value="availability"> Availability </option>
+  </select>
+  <input type="text" name="search">  
+</body>
+</html> 
