@@ -7,7 +7,7 @@
 <body>
 <p class="splash"> A&T Library Search </p>
 <form action="cgi/book-query"> 
-  <select name="searchtype">
+  <select name="searchby">
     <option value="title"> Title </option>
     <option value="author"> Author </option>
     <option value="summary"> Summary </option>
@@ -18,6 +18,15 @@
     <option value="isbn"> ISBN </option>
     <option value="availability"> Availability </option>
   </select>
-  <input type="text" name="search">  
+  <input type="text" name="search">
+  <div>
+  <p>Search type: </p>
+  <label> Partial Match <input type="radio" value="partial" name="searchtype"> </label>
+  <label> Exact Match <input type="radio" value="exact" name="searchtype"> </label>
+  </div>
+</form>
+<form>
+ 
+</form>
 </body>
 </html> 
