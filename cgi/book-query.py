@@ -1,5 +1,7 @@
 #/usr/bin/python3
 
+import os
+
 import sqlite3
 
 import cgi
@@ -82,7 +84,13 @@ def run_query():
 
 def query_failure():
     """Give an HTTP response indicating the query failed."""
+    response_html_dir = os.path.split(os.path.split(__file__)) + "query_failure.html"
+    response_html = open(response_html_dir).read()
     #HTTP Headers
-    print(
+    print("HTTP/1.1 200 OK")
+    print("Content-Type: text/html; charset=utf-8")
+    print("Content-Length: " + str(len(response_html)))
     # Seperator between header and HTML
     print()
+    #HTML
+    print(response_html)
