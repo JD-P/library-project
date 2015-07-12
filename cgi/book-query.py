@@ -82,6 +82,43 @@ def run_query():
     else:
         return False
 
+def query_response(rows):
+    html_start_block = (
+        """<html>
+             <head>
+               <link href="css/query.css" rel="stylesheet">
+               <title> List of Books in A&T Library Found By Your Query </title>
+               <meta charset="utf-8">
+             </head>
+             <body>
+             <table>
+             <tr> <td>id</td> <td>Title</td> <td>Author</td> <td>Publish Date</td> 
+               <td> Edition </td> <td> Publisher </td> <td> Availability </td> </tr>  
+        """)
+    html_rows= [["<tr>"] +  
+                ["<td>" + str(column_data) + "</td>" for column_data in row] + 
+                ["</tr>"] for row in rows]
+    for html_row in html_rows:
+        item_id = html_row[1][3:-5]
+        html_row[1] = ('<a href="cgi/book_lookup.py?id=' + item_id + '">' + 
+                       item_id + '</a>')
+        html_start_block += html_row
+    html_end_block = (
+        """    </table>
+             </body>
+           </html>
+        """
+        )
+    html_start_block += html_end_block
+    #HTTP Headers
+    print("HTTP/1.1 200 OK")
+    print("Content-Type: text/html; charset=utf-8")
+    print("Content-Length: " + str(len(html_start_block)))
+    # Seperator between header and HTML
+    print()
+    #HTML
+    print(html_start_block)
+
 def query_failure():
     """Give an HTTP response indicating the query failed."""
     response_html_dir = os.path.split(os.path.split(__file__)) + "query_failure.html"
