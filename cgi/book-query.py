@@ -6,7 +6,17 @@ import cgi
 
 import httplib
 
+def main():
+    rows = run_query()
+    if rows is False:
+        query_failure()
+        return False
+    else:
+        query_success(rows)
+        return True
+
 def run_query():
+    """Run the queries against the sqlite backend and return the resulting rows."""
     query = cgi.FieldStorage()
     search_by = query.getvalue("searchby")
     search_type = query.getvalue("searchtype")
@@ -51,13 +61,28 @@ def run_query():
         query_cursor.execute(partial_sql + "isbn13" + search_type + ";", (search,))
         return intermediate_results + query_cursor.fetchall()
     elif search_by == 'availability':
-        pass
+        if search[0] == "%":
+            search = search[1]
+        else:
+            pass
+        if search == '0' or search == 'false' or search == 'False':
+            query_cursor.execute(partial_sql + "availability=0;")
+            return query_cursor.fetchall()
+        elif search == '1' or search == 'true' or search == 'True':
+            query_cursor.execute(partial_sql + "availability=1;")
+        else:
+            return False
     # Handle all other 'generic' cases.
     elif search_by in search_columns:
         partial_sql = ()
         query_cursor.execute(partial_sql + search_by + search_type + ";", (search,))
+        return query_cursor.fetchall()
     else:
         return False
 
-# Seperator between header and HTML
-print()
+def query_failure():
+    """Give an HTTP response indicating the query failed."""
+    #HTTP Headers
+    print(
+    # Seperator between header and HTML
+    print()
