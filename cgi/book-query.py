@@ -102,7 +102,7 @@ def query_response(rows):
                 ["<td>" + str(column_data) + "</td>" for column_data in row] + 
                 ["</tr>"] for row in rows]
     for html_row in html_rows:
-        item_id = html_row[1][3:-5]
+        item_id = html_row[1][4:-5]
         html_row[1] = ('<td>' '<a href="cgi/book_lookup.py?id=' + item_id + '">' + 
                        item_id + '</a>' + '</td>')
         html_start_block += ''.join(html_row)
