@@ -30,8 +30,12 @@ def run_query():
         search = "%" + query.getvalue("search") + "%"
     else:
         search = query.getvalue("search")
-    books_db_dir = os.path.split(__file__)[0] + "books.sqlite"
-    books_db = sqlite3.connect(books_db_dir)
+    test = open("books.sqlite", 'r+')
+    books_db_path = os.path.join(
+        os.path.split(
+            os.path.abspath(__file__))[0], 
+        "books.sqlite")
+    books_db = sqlite3.connect(books_db_path)
     query_cursor = books_db.cursor()
     search_columns = ["title", "author", "summary",
                      "publisher", "dewey", "locc"]
@@ -110,25 +114,26 @@ def query_response(rows):
         )
     html_start_block += html_end_block
     #HTTP Headers
-    print("HTTP/1.1 200 OK")
-    print("Content-Type: text/html; charset=utf-8")
-    print("Content-Length: " + str(len(html_start_block)))
+    print("Content-Type: text/html; charset=utf-8", end='\r\n')
+    print("Content-Length: " + str(len(html_start_block)), end='\r\n')
     # Seperator between header and HTML
-    print()
+    print(end='\r\n')
     #HTML
     print(html_start_block)
 
 def query_failure():
     """Give an HTTP response indicating the query failed."""
-    response_html_dir = (os.path.split(os.path.split(__file__)[0])[0] 
-                         + "query_failure.html")
+    response_html_dir = os.path.join(
+        os.path.split(
+            os.path.split(
+                os.path.abspath(__file__))[0])[0], 
+        "query_failure.html")
     response_html = open(response_html_dir).read()
     #HTTP Headers
-    print("HTTP/1.1 200 OK")
-    print("Content-Type: text/html; charset=utf-8")
-    print("Content-Length: " + str(len(response_html)))
+    print("Content-Type: text/html; charset=utf-8", end='\r\n')
+    print("Content-Length: " + str(len(response_html)), end='\r\n')
     # Seperator between header and HTML
-    print()
+    print(end='\r\n')
     #HTML
     print(response_html)
 
