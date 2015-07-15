@@ -1,4 +1,4 @@
-#/usr/bin/python3
+#!/usr/bin/python3
 
 import os
 
@@ -6,15 +6,13 @@ import sqlite3
 
 import cgi
 
-import httplib
-
 def main():
     rows = run_query()
     if rows is False:
         query_failure()
         return False
     else:
-        query_success(rows)
+        query_response(rows)
         return True
 
 def run_query():
@@ -32,7 +30,8 @@ def run_query():
         search = "%" + query.getvalue("search") + "%"
     else:
         search = query.getvalue("search")
-    books_db = sqlite3.connect("books.sqlite")
+    books_db_dir = os.path.split(__file__)[0] + "books.sqlite"
+    books_db = sqlite3.connect(books_db_dir)
     query_cursor = books_db.cursor()
     search_columns = ["title", "author", "summary",
                      "publisher", "dewey", "locc"]
@@ -76,7 +75,6 @@ def run_query():
             return False
     # Handle all other 'generic' cases.
     elif search_by in search_columns:
-        partial_sql = ()
         query_cursor.execute(partial_sql + search_by + search_type + ";", (search,))
         return query_cursor.fetchall()
     else:
@@ -92,17 +90,18 @@ def query_response(rows):
              </head>
              <body>
              <table>
-             <tr> <td>id</td> <td>Title</td> <td>Author</td> <td>Publish Date</td> 
-               <td> Edition </td> <td> Publisher </td> <td> Availability </td> </tr>  
+             <tr> <td>id</td> <td>Title</td> <td>Author</td> 
+                  <td>Publish Info</td> <td> Edition </td> <td> Availability </td> 
+             </tr>  
         """)
     html_rows= [["<tr>"] +  
                 ["<td>" + str(column_data) + "</td>" for column_data in row] + 
                 ["</tr>"] for row in rows]
     for html_row in html_rows:
         item_id = html_row[1][3:-5]
-        html_row[1] = ('<a href="cgi/book_lookup.py?id=' + item_id + '">' + 
-                       item_id + '</a>')
-        html_start_block += html_row
+        html_row[1] = ('<td>' '<a href="cgi/book_lookup.py?id=' + item_id + '">' + 
+                       item_id + '</a>' + '</td>')
+        html_start_block += ''.join(html_row)
     html_end_block = (
         """    </table>
              </body>
@@ -121,7 +120,8 @@ def query_response(rows):
 
 def query_failure():
     """Give an HTTP response indicating the query failed."""
-    response_html_dir = os.path.split(os.path.split(__file__)) + "query_failure.html"
+    response_html_dir = (os.path.split(os.path.split(__file__)[0])[0] 
+                         + "query_failure.html")
     response_html = open(response_html_dir).read()
     #HTTP Headers
     print("HTTP/1.1 200 OK")
@@ -131,3 +131,5 @@ def query_failure():
     print()
     #HTML
     print(response_html)
+
+main()
