@@ -30,7 +30,6 @@ def run_query():
         search = "%" + query.getvalue("search") + "%"
     else:
         search = query.getvalue("search")
-    test = open("books.sqlite", 'r+')
     books_db_path = os.path.join(
         os.path.split(
             os.path.abspath(__file__))[0], 
@@ -88,7 +87,7 @@ def query_response(rows):
     html_start_block = (
         """<html>
              <head>
-               <link href="css/query.css" rel="stylesheet">
+               <link href="/css/query.css" rel="stylesheet">
                <title> List of Books in A&T Library Found By Your Query </title>
                <meta charset="utf-8">
              </head>
@@ -103,7 +102,7 @@ def query_response(rows):
                 ["</tr>"] for row in rows]
     for html_row in html_rows:
         item_id = html_row[1][4:-5]
-        html_row[1] = ('<td>' '<a href="cgi/book_lookup.py?id=' + item_id + '">' + 
+        html_row[1] = ('<td>' '<a href="/cgi/book_lookup.py?id=' + item_id + '">' + 
                        item_id + '</a>' + '</td>')
         html_start_block += ''.join(html_row)
     html_end_block = (
