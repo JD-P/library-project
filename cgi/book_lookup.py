@@ -2,11 +2,16 @@
 
 import os
 
+import sys
+
+import codecs
+
 import sqlite3
 
 import cgi
 
 def main():
+    writer = codecs.getwriter('utf-8')(sys.stdout.buffer)
     query = cgi.FieldStorage()
     book_id = query.getvalue("id")
     books_db_path = os.path.join(
@@ -33,16 +38,19 @@ def main():
                           '    <title> Details for "' + book_data[0] + '" </title>\n'
                           '    <meta charset="utf-8">\n'
                         '  </head>\n'
-                        '  <body>\n')
+                        '  <body>\n'
+                        '    <article>\n')
+    book_data_html[0] = '<h1> ' + book_data_html[0] + ' </h1>'
     html_start_block += ''.join(book_data_html)
-    html_start_block += ('  </body>\n'
+    html_start_block += ('    </article>\n'
+                         '  </body>\n'
                          '</html>\n')
     # HTTP Headers
-    print("Content-Type: text/html; charset=utf-8", end="\r\n")
-    print("Content-Length: " + str(len(html_start_block)), end="\r\n")
+    writer.write("Content-Type: text/html; charset=utf-8" + "\r\n")
+    writer.write("Content-Length: " + str(len(html_start_block)) + "\r\n")
     # Seperator between headers and HTML
-    print(end="\r\n")
+    writer.write("\r\n")
     # HTML
-    print(html_start_block)
+    writer.write(html_start_block)
 
 main()
