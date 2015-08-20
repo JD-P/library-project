@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 
+import sys
+
 import os
 
 import sqlite3
+
+import codecs
 
 import cgi
 
@@ -27,7 +31,10 @@ def run_query():
         search_type = " like ?"
     # Prepend and append bits to search statement based on search type
     if search_type == " like ?":
-        search = "%" + query.getvalue("search") + "%"
+        try:
+            search = "%" + query.getvalue("search") + "%"
+        except TypeError:
+            return False
     else:
         search = query.getvalue("search")
     books_db_path = os.path.join(
@@ -74,6 +81,7 @@ def run_query():
             return query_cursor.fetchall()
         elif search == '1' or search == 'true' or search == 'True':
             query_cursor.execute(partial_sql + "availability=1;")
+            return query_cursor.fetchall()
         else:
             return False
     # Handle all other 'generic' cases.
@@ -84,6 +92,7 @@ def run_query():
         return False
 
 def query_response(rows):
+    writer = codecs.getwriter('utf-8')(sys.stdout.buffer)
     html_start_block = (
         """<html>
              <head>
@@ -113,15 +122,16 @@ def query_response(rows):
         )
     html_start_block += html_end_block
     #HTTP Headers
-    print("Content-Type: text/html; charset=utf-8", end='\r\n')
-    print("Content-Length: " + str(len(html_start_block)), end='\r\n')
+    writer.write("Content-Type: text/html; charset=utf-8" + '\r\n')
+    writer.write("Content-Length: " + str(len(html_start_block)) + '\r\n')
     # Seperator between header and HTML
-    print(end='\r\n')
+    writer.write('\r\n')
     #HTML
-    print(html_start_block)
+    writer.write(html_start_block)
 
 def query_failure():
     """Give an HTTP response indicating the query failed."""
+    writer = codecs.getwriter('utf-8')(sys.stdout.buffer)
     response_html_dir = os.path.join(
         os.path.split(
             os.path.split(
@@ -129,11 +139,11 @@ def query_failure():
         "query_failure.html")
     response_html = open(response_html_dir).read()
     #HTTP Headers
-    print("Content-Type: text/html; charset=utf-8", end='\r\n')
-    print("Content-Length: " + str(len(response_html)), end='\r\n')
+    writer.write("Content-Type: text/html; charset=utf-8" + '\r\n')
+    writer.write("Content-Length: " + str(len(response_html)) + '\r\n')
     # Seperator between header and HTML
-    print(end='\r\n')
+    writer.write('\r\n')
     #HTML
-    print(response_html)
+    writer.write(response_html)
 
 main()
