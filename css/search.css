@@ -14,3 +14,10 @@ body {
 .splash {
     font-size: 36;
 }
+
+.search-button {
+    margin-top: 1ch;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    }
