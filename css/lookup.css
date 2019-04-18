@@ -1,4 +1,42 @@
-body {
+html {
     background-color: 00a3ff;
     font-family: sans-serif;
     }
+
+body article{
+  background-color: rgba(255, 255, 255, .45);
+  display: flex;
+  flex-flow: column;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+article * {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  font-size: 1.2em;
+}
+
+h2 {
+  font-size: 1.1em;
+}
+
+#author {
+  margin-top: 0px;
+}
+
+#subject-div {
+  margin-left: 25%;
+}
+
+#id-numbers {
+  margin-left: 25%;
+}
+
+#id-numbers p {
+  margin: 5px;
+}

@@ -1,12 +1,36 @@
 body {
-    background-color: 00a3ff;
+    background-color: #00a3ff;
     font-family: sans-serif;
+    margin-left: auto;
+    margin-right: auto;
     }
 
 table {
   background-color: rgba(255, 255, 255, .45);
   display: flex;
-  flex-basis: 80ch;
-  margin-left: 15ch;
-  margin-right: 15ch;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+}
+
+tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, .20);
+}
+
+tr:first-of-type {
+  background-color: white;
+  font-weight: bold;
+}
+
+td {
+  padding: 0.5em;
+}
+
+td a {
+  text-decoration: none;
+}
+
+td:nth-of-type(6) {
+  text-align: right;
 }
